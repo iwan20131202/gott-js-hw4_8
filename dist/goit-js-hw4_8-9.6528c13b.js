@@ -207,11 +207,11 @@
       });
     }
   }
-})({"kck9m":[function(require,module,exports,__globalThis) {
+})({"5i5I7":[function(require,module,exports,__globalThis) {
 var global = arguments[3];
 var HMR_HOST = null;
 var HMR_PORT = null;
-var HMR_SERVER_PORT = 52853;
+var HMR_SERVER_PORT = 49546;
 var HMR_SECURE = false;
 var HMR_ENV_HASH = "439701173a9199ea";
 var HMR_USE_SSE = false;
@@ -714,125 +714,70 @@ function hmrAccept(bundle /*: ParcelRequire */ , id /*: string */ ) {
 }
 
 },{}],"6kb64":[function(require,module,exports,__globalThis) {
-var _task1 = require("./tasks/task-1");
-var _task2 = require("./tasks/task-2");
-
-},{"./tasks/task-1":"3qDfp","./tasks/task-2":"4misn"}],"3qDfp":[function(require,module,exports,__globalThis) {
-var _storage = require("../storage/storage");
-const bookmarkInput = document.querySelector("#bookmarkInput");
-const addBookmarkBtn = document.querySelector("#addBookmarkBtn");
-const bookmarkList = document.querySelector("#bookmarkList");
-const handleAddingBookmark = ()=>{
-    const inputValue = bookmarkInput.value.trim();
-    if (inputValue === "") return alert("\u0412\u0432\u0435\u0434\u0456\u0442\u044C URL!");
-    const newItem = document.createElement("li");
-    const newLink = document.createElement("a");
-    newLink.href = inputValue;
-    newLink.classList.add("bookmark-link");
-    newLink.textContent = inputValue;
-    const newBtn = document.createElement("button");
-    newBtn.textContent = "\u2716";
-    newBtn.classList.add("delete");
-    const handleRemove = ()=>{
-        newItem.remove();
-        const bookmarkData = (0, _storage.load)("bookmarkData");
-        (0, _storage.save)("bookmarkData", bookmarkData);
-    };
-    newBtn.addEventListener("click", handleRemove);
-    newItem.appendChild(newLink);
-    newItem.appendChild(newBtn);
-    bookmarkList.append(newItem);
-// const bookmarkData = load("bookmarkData");
-// save("bookmarkData", bookmarkData);
-};
-addBookmarkBtn.addEventListener("click", handleAddingBookmark);
-
-},{"../storage/storage":"cKslY"}],"cKslY":[function(require,module,exports,__globalThis) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "save", ()=>save);
-parcelHelpers.export(exports, "load", ()=>load);
-parcelHelpers.export(exports, "remove", ()=>remove);
-parcelHelpers.export(exports, "clear", ()=>clear);
-const save = (key, value)=>{
-    try {
-        const serializedState = JSON.stringify(value);
-        localStorage.setItem(key, serializedState);
-    } catch (error) {
-        console.error("\u0423\u043F\u0441, \u043F\u043E\u043C\u0438\u043B\u043E\u0447\u043A\u0430 \u043F\u0440\u0438 \u0437\u0431\u0435\u0440\u0435\u0436\u0435\u043D\u0456 \u0434\u0430\u043D\u0438\u0445 \u0432 \u0441\u0445\u043E\u0432\u0438\u0449\u0456!", error);
-    }
-};
-const load = (key)=>{
-    try {
-        const serializedState = localStorage.getItem(key);
-        if (serializedState === null) return undefined;
-        else return JSON.parse(serializedState);
-    } catch (error) {
-        console.error("\u0423\u043F\u0441, \u043F\u043E\u043C\u0438\u043B\u043E\u0447\u043A\u0430 \u043F\u0440\u0438 \u0437\u0430\u0432\u0430\u043D\u0442\u0430\u0436\u0435\u043D\u043D\u0456 \u0434\u0430\u043D\u0438\u0445 \u0437 \u0441\u0445\u043E\u0432\u0438\u0449\u0430!", error);
-    }
-};
-const remove = (key)=>{
-    try {
-        const serializedState = localStorage.removeItem(key);
-    } catch (error) {
-        console.error("\u0423\u043F\u0441, \u043F\u043E\u043C\u0438\u043B\u043E\u0447\u043A\u0430 \u043F\u0440\u0438 \u0432\u0438\u0434\u0430\u043B\u0435\u043D\u043D\u0456 \u0434\u0430\u043D\u0438\u0445 \u0437 \u0441\u0445\u043E\u0432\u0438\u0449\u0430!", error);
-    }
-};
-const clear = ()=>{
-    try {
-        const serializedState = localStorage.clear();
-    } catch (error) {
-        console.error("\u0423\u043F\u0441, \u043F\u043E\u043C\u0438\u043B\u043E\u0447\u043A\u0430 \u043F\u0440\u0438 \u043E\u0447\u0438\u0449\u0435\u043D\u0456 \u0441\u0445\u043E\u0432\u0438\u0449\u0430!", error);
-    }
-};
-
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT"}],"jnFvT":[function(require,module,exports,__globalThis) {
-exports.interopDefault = function(a) {
-    return a && a.__esModule ? a : {
-        default: a
-    };
-};
-exports.defineInteropFlag = function(a) {
-    Object.defineProperty(a, '__esModule', {
-        value: true
+const input = document.getElementById("bookmarkInput");
+const addBtn = document.getElementById("addBookmarkBtn");
+const list = document.getElementById("bookmarkList");
+let bookmarks = JSON.parse(localStorage.getItem("bookmarks")) || [];
+renderBookmarks();
+addBtn.addEventListener("click", ()=>{
+    const url = input.value.trim();
+    if (!url) return;
+    bookmarks.push(url);
+    input.value = "";
+    saveBookmarks();
+    renderBookmarks();
+});
+function renderBookmarks() {
+    list.innerHTML = "";
+    bookmarks.forEach((url, index)=>{
+        const li = document.createElement("li");
+        const link = document.createElement("a");
+        link.href = url;
+        link.textContent = url;
+        link.target = "_blank";
+        const editBtn = document.createElement("button");
+        editBtn.textContent = "\u270E";
+        editBtn.style.background = "orange";
+        editBtn.onclick = ()=>editBookmark(index);
+        const delBtn = document.createElement("button");
+        delBtn.textContent = "X";
+        delBtn.classList.add("delete");
+        delBtn.onclick = ()=>deleteBookmark(index);
+        li.appendChild(link);
+        li.appendChild(editBtn);
+        li.appendChild(delBtn);
+        list.appendChild(li);
     });
-};
-exports.exportAll = function(source, dest) {
-    Object.keys(source).forEach(function(key) {
-        if (key === 'default' || key === '__esModule' || Object.prototype.hasOwnProperty.call(dest, key)) return;
-        Object.defineProperty(dest, key, {
-            enumerable: true,
-            get: function() {
-                return source[key];
-            }
-        });
-    });
-    return dest;
-};
-exports.export = function(dest, destName, get) {
-    Object.defineProperty(dest, destName, {
-        enumerable: true,
-        get: get
-    });
-};
-
-},{}],"4misn":[function(require,module,exports,__globalThis) {
-var _storage = require("../storage/storage");
-const form = document.querySelector(".form");
-const userData = (0, _storage.load)("userData");
-if (userData) {
-    form.username.value = userData.username;
-    form.password.value = userData.password;
 }
-const handleSaveData = (event)=>{
-    const userData = {
-        username: event.currentTarget.username.value,
-        password: event.currentTarget.password.value
-    };
-    (0, _storage.save)("userData", userData);
-};
-form.addEventListener("input", handleSaveData);
+function deleteBookmark(i) {
+    bookmarks.splice(i, 1);
+    saveBookmarks();
+    renderBookmarks();
+}
+function editBookmark(i) {
+    const newURL = prompt("\u0420\u0435\u0434\u0430\u0433\u0443\u0432\u0430\u0442\u0438 URL:", bookmarks[i]);
+    if (newURL) {
+        bookmarks[i] = newURL;
+        saveBookmarks();
+        renderBookmarks();
+    }
+}
+function saveBookmarks() {
+    localStorage.setItem("bookmarks", JSON.stringify(bookmarks));
+}
+const username = document.getElementById("username");
+const password = document.getElementById("password");
+const saveBtn = document.getElementById("saveBtn");
+window.addEventListener("DOMContentLoaded", ()=>{
+    username.value = localStorage.getItem("savedUsername") || "";
+    password.value = localStorage.getItem("savedPassword") || "";
+});
+saveBtn.addEventListener("click", ()=>{
+    localStorage.setItem("savedUsername", username.value);
+    localStorage.setItem("savedPassword", password.value);
+    alert("\u0414\u0430\u043D\u0456 \u0437\u0431\u0435\u0440\u0435\u0436\u0435\u043D\u043E!");
+});
 
-},{"../storage/storage":"cKslY"}]},["kck9m","6kb64"], "6kb64", "parcelRequire214d", {})
+},{}]},["5i5I7","6kb64"], "6kb64", "parcelRequire214d", {})
 
 //# sourceMappingURL=goit-js-hw4_8-9.6528c13b.js.map
